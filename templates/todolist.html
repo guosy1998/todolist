@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todolist</title>
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+
+    <div id="todolist"></div>
+    <script type="text/babel">
+        ReactDOM.render
+        (
+            <h1>Todolist</h1>,
+            document.getElementById('todolist')
+        );
+    </script>
+
+    <!-- add an item -->
+    <form name="add" action="/todolist/add" method="post">
+        {% csrf_token %}
+        <div>
+            Name:<br>
+            <input name="name"><br>
+            Content:<br>
+            <input name="content"><br>
+            Expire Date:<br>
+            <input type="date" name="expire_date"><br>
+            <!-- Status -->
+            <input type="hidden" name="status" value="0">
+            Priority:
+            <select name="priority">
+                <option value="1" selected>Low</option>
+                <option value="2">High</option>
+            </select><br>
+            <button type="submit">Add</button><br>
+            <br>
+        </div>
+    </form><br>
+
+    <!-- show the list-->
+    <table border="1" frame="void" rules="rows" width="100%">
+        <tr><th></th></tr>
+
+        {% for item in todolist %}
+            <tr>
+                <td>
+                    <!-- edit button -->
+                    <form name="edit" action="/todolist/edit" method="post">
+                        {% csrf_token %}
+                        <br>
+                        <input type="hidden" name="id" value="{{ item.id }}">
+                        <button type="submit">Edit</button><br>
+                    </form>
+
+                    <label>Name: {{ item.name }}</label><br>
+                    <label>Content: {{ item.content }}</label><br>
+                    <label>Expire Date: {{ item.expire_date }}</label><br>
+
+                    {% ifequal item.status '0' %}
+                        <!-- change the status -->
+                        <form name="status" action="/todolist/status" method="POST">
+                            {% csrf_token %}
+                            <label>Status: Pending</label>
+                            <input type="hidden" name="id" value="{{ item.id }}">
+                            <button type="submit">√</button>
+                        </form>
+                    {% else %}
+                        <label>Status: Complete</label><br>
+                    {% endifequal %}
+
+                    {% ifequal item.priority '1' %}
+                        <label>Priority: Low</label><br>
+                    {% else %}
+                        <label>Priority: High</label><br>
+                    {% endifequal %}
+
+                    <!-- delete button -->
+                    <form name="delete" action="/todolist/delete" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ item.id }}">
+                        <button type="submit">Delete</button><br>
+                    </form><br>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
