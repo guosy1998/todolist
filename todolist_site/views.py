@@ -11,7 +11,17 @@ from .serializer import TodolistSerializer
 class TodolistView(APIView):
 
     def show(request):
-        todolist = Todolist.objects.all().order_by('id')
+        seq = request.POST.get('seq')
+        if seq == None:
+            seq = 0
+        print(f'{seq}')
+        if seq == '2':
+            todolist = Todolist.objects.all().order_by('expire_date')
+        elif seq == '1':
+            todolist = Todolist.objects.all().order_by('-priority')
+        else:
+            todolist = Todolist.objects.all().order_by('id')
+
         serializer = TodolistSerializer(todolist, many=True)
         return render(request, template_name='todolist.html', context={'todolist': serializer.data})
 
