@@ -15,12 +15,12 @@ class Todolist(models.Model):
         ('1', 'Complete'),
     )
 
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    content = models.TextField()
-    expire_date = models.DateField()
-    status = models.CharField(max_length=1, choices=COMPLPETE_CHOICES, default='0')
-    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='1')
+    id = models.AutoField(primary_key=True) # for object referencing
+    name = models.CharField(max_length=50) # name of the item
+    content = models.TextField() # description of the item
+    expire_date = models.DateField() # when the item is expire
+    status = models.CharField(max_length=1, choices=COMPLPETE_CHOICES, default='0') # the complete status of the item
+    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='1') # the priority of the item
 
     def __str__(self):
         return f'{self.name} ({self.id})'

@@ -1,6 +1,4 @@
 from django.shortcuts import render
-from rest_framework import status, generics
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import redirect
 
@@ -10,11 +8,11 @@ from .serializer import TodolistSerializer
 # Create your views here.
 class TodolistView(APIView):
 
+    # show the items by certain order
     def show(request):
         seq = request.POST.get('seq')
-        if seq == None:
-            seq = 0
-        print(f'{seq}')
+
+        # 3 options for seq: 2:expire_date; 1:priority; 0:id
         if seq == '2':
             todolist = Todolist.objects.all().order_by('expire_date')
         elif seq == '1':
@@ -25,18 +23,21 @@ class TodolistView(APIView):
         serializer = TodolistSerializer(todolist, many=True)
         return render(request, template_name='todolist.html', context={'todolist': serializer.data})
 
+    # create a new item
     def add(request):
         serializer = TodolistSerializer(data=request.POST)
         if serializer.is_valid():
             serializer.save()
         return redirect('todolist')
 
+    # delete an existing item
     def delete(request):
         id = request.POST.get('id')
         item = Todolist.objects.get(id=id)
         item.delete()
         return redirect('todolist')
 
+    # change the status of an existing item
     def status(request):
         id = request.POST.get('id')
         item = Todolist.objects.get(id=id)
@@ -44,12 +45,14 @@ class TodolistView(APIView):
         item.save()
         return redirect('todolist')
 
+    # edit an existing item, showing the edit page
     def edit(request):
         id = request.POST.get('id')
         todolist = Todolist.objects.filter(id=id)
         serializer = TodolistSerializer(todolist, many=True)
         return render(request, template_name='todolist_edit.html', context={'todolist': serializer.data})
 
+    # edit an existing item, submit the result
     def edit_submit(request):
         id = request.POST.get('id')
         name = request.POST.get('name')
@@ -69,6 +72,10 @@ class TodolistView(APIView):
         return redirect('todolist')
 
 """
+    # Django restframework example code, not used
+    # Add the following lines when needed
+    # from rest_framework import status, generics
+    # from rest_framework.response import Response
     def get(self, request, format=None):
         todolist = Todolist.objects.all()
         serializer = TodolistSerializer(todolist, many=True)

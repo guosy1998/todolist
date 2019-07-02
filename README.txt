@@ -10,3 +10,8 @@
 通过网页最上部分进行新待办事项的创建
 选择需要的排序并点击order按钮即可排序
 每一个条目内有delete和edit两个按钮
+
+文件夹说明：
+todolist： Django Project设置文件
+todolist_site： 网站功能页面
+templates： 网页模板
