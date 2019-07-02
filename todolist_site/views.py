@@ -45,28 +45,23 @@ class TodolistView(APIView):
         item.save()
         return redirect('todolist')
 
-    # edit an existing item, showing the edit page
+    # edit an existing item: showing the edit page
     def edit(request):
         id = request.POST.get('id')
         todolist = Todolist.objects.filter(id=id)
         serializer = TodolistSerializer(todolist, many=True)
         return render(request, template_name='todolist_edit.html', context={'todolist': serializer.data})
 
-    # edit an existing item, submit the result
+    # edit an existing item: submit the result
     def edit_submit(request):
         id = request.POST.get('id')
-        name = request.POST.get('name')
-        content = request.POST.get('content')
-        expire_date = request.POST.get('expire_date')
-        status = request.POST.get('status')
-        priority = request.POST.get('priority')
 
         item = Todolist.objects.get(id=id)
-        item.name = name
-        item.content = content
-        item.expire_date = expire_date
-        item.status = status
-        item.priority = priority
+        item.name = request.POST.get('name')
+        item.content = request.POST.get('content')
+        item.expire_date = request.POST.get('expire_date')
+        item.status = request.POST.get('status')
+        item.priority = request.POST.get('priority')
         item.save()
 
         return redirect('todolist')
