@@ -43,27 +43,61 @@
             <tr>
                 <td>
                     <div class="origin{{ item.id }}" style="display: inline">
-                        <label>Name: {{ item.name }}</label><br>
-                        <label>Content: {{ item.content }}</label><br>
-                        <label>Expire Date: {{ item.expire_date }}</label><br>
+                        <div id="origin{{ item.id }}"></div>
+                        <script type="text/babel">
+                            class Status extends React.Component{
+                                render() {
+                                    if (this.props.status=='0') {
+                                        //change status
+                                        return (
+                                            <form name="status" action="/todolist/status" method="POST">
+                                                <input type="hidden" name="id" value={this.props.id}  />
+                                                <label>Status: Pending</label>
+                                                <button class="button" type="submit">√</button>
+                                            </form>
+                                        );
+                                    }
+                                    else {
+                                        return (
+                                            <div>
+                                                <label>Status: Complete</label><br />
+                                            </div>
+                                        );
+                                    }
+                                }
+                            };
 
-                        {% ifequal item.status '0' %}
-                            <!-- change the status -->
-                            <form name="status" action="/todolist/status" method="POST">
-                                {% csrf_token %}
-                                <label>Status: Pending</label>
-                                <input type="hidden" name="id" value="{{ item.id }}">
-                                <button class="button" type="submit">√</button>
-                            </form>
-                        {% else %}
-                            <label>Status: Complete</label><br>
-                        {% endifequal %}
+                            class Priority extends React.Component{
+                                render() {
+                                    if (this.props.priority=='1') {
+                                        return (
+                                            <div>
+                                                <label>Priority: Low</label><br />
+                                            </div>
+                                        );
+                                    }
+                                    else {
+                                        return (
+                                            <div>
+                                                <label>Priority: High</label><br />
+                                            </div>
+                                        );
+                                    }
+                                }
+                            };
 
-                        {% ifequal item.priority '1' %}
-                            <label>Priority: Low</label><br>
-                        {% else %}
-                            <label>Priority: High</label><br>
-                        {% endifequal %}
+                            ReactDOM.render
+                            (
+                                <div>
+                                    <label>Name: {{ item.name }}</label><br />
+                                    <label>Content: {{ item.content }}</label><br />
+                                    <label>Expire Date: {{ item.expire_date }}</label><br />
+                                    <Status status="{{ item.status }}" id="{{ item.id }}" />
+                                    <Priority priority="{{ item.priority }}" />
+                                </div>,
+                                document.getElementById('origin'+{{ item.id }})
+                            );
+                        </script>
 
                         <table>
                             <tr>
@@ -103,6 +137,7 @@
                                 <option value="1" selected>Low</option>
                                 <option value="2">High</option>
                             </select><br>
+
                             <table>
                                 <tr>
                                     <th>
@@ -141,39 +176,21 @@
 
     //add an item
     class AddPanel extends React.Component{
-        constructor(props) {
-            super(props);
-            this.state = {
-                name: '',
-                content: '',
-                expire_date: '',
-                status: 0,
-                priority: 1,
-            };
-            this.handleChange = this.handleChange.bind(this);
-        }
-
-        handleChange(event) {
-            this.setState({[event.target.name]: event.target.value});
-        }
-
         render() {
             return (
                 <form name="add" action="/todolist/add" method="post">
-                    <div>
-                        Name:<br />
-                        <input name="name" onChange={this.handleChange} /><br />
-                        Content:<br />
-                        <input name="content" onChange={this.handleChange} /><br />
-                        Expire Date:<br />
-                        <input type="date" name="expire_date" onChange={this.handleChange} /><br />
-                        Priority:
-                        <select name="priority" onChange={this.handleChange}>
-                            <option value="1" selected>Low</option>
-                            <option value="2">High</option>
-                        </select><br />
-                        <button type="submit">Add</button>
-                    </div>
+                    Name:<br />
+                    <input name="name" /><br />
+                    Content:<br />
+                    <input name="content" /><br />
+                    Expire Date:<br />
+                    <input type="date" name="expire_date" /><br />
+                    Priority:
+                    <select name="priority">
+                        <option value="1" selected>Low</option>
+                        <option value="2">High</option>
+                    </select><br />
+                    <button type="submit">Add</button>
                 </form>
             );
         }
@@ -181,19 +198,10 @@
 
     //order
     class OrderPanel extends React.Component{
-        constructor(props) {
-            super(props);
-            this.state = {seq: 0};
-        }
-
-        handleChange(event) {
-            this.setState({[event.target.name]: event.target.value});
-        }
-
         render() {
             return (
                 <form name="order" action="/todolist/" method="post">
-                    <select name="seq" onChange={this.handleChange.bind(this)}>
+                    <select name="seq">
                         <option value="0" selected>Time Created</option>
                         <option value="1">Priority</option>
                         <option value="2">Expire Date</option>
@@ -204,6 +212,7 @@
         }
     }
 
+    //function panel
     ReactDOM.render(
         <div>
             <AddPanel />
