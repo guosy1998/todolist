@@ -30,42 +30,15 @@
 </head>
 <body>
     <!-- title -->
-    <div id="todolist"></div>
-    <script type="text/babel">
-        ReactDOM.render
-        (
-            <h1>Todolist</h1>,
-            document.getElementById('todolist')
-        );
-    </script>
+    <div id="title"></div>
 
-    <!-- add an item -->
-    <form name="add" action="/todolist/add" method="post">
-        {% csrf_token %}
-        <div>
-            Name:<br>
-            <input name="name"><br>
-            Content:<br>
-            <input name="content"><br>
-            Expire Date:<br>
-            <input type="date" name="expire_date"><br>
-            <!-- Status -->
-            <input type="hidden" name="status" value="0">
-            Priority:
-            <select name="priority">
-                <option value="1" selected>Low</option>
-                <option value="2">High</option>
-            </select><br>
-            <button type="submit">Add</button><br>
-            <br>
-        </div>
-    </form><br>
+    <!-- mainlist -->
+    <div id="todolist"></div>
 
     <!-- show the list-->
     <table border="1" bgcolor="white" frame="void" rules="rows" width="100%">
         <!-- change the list order -->
         <form name="order" action="/todolist/" method="post">
-            {% csrf_token %}
             <select name="seq">
                 <option value="0" selected>Time Created</option>
                 <option value="1">Priority</option>
@@ -106,7 +79,6 @@
                             <th>
                                 <!-- edit button -->
                                 <form name="edit" action="/todolist/edit" method="post">
-                                    {% csrf_token %}
                                     <input type="hidden" name="id" value="{{ item.id }}">
                                     <button class="button" type="submit">Edit</button><br>
                                 </form>
@@ -115,7 +87,6 @@
                             <th>
                                 <!-- delete button -->
                                 <form name="delete" action="/todolist/delete" method="post">
-                                    {% csrf_token %}
                                     <input type="hidden" name="id" value="{{ item.id }}">
                                     <button class="button" type="submit">Delete</button><br>
                                 </form>
@@ -130,3 +101,63 @@
 
 </body>
 </html>
+
+
+<script type="text/babel">
+    //title
+    ReactDOM.render
+    (
+        <h1>Todolist</h1>,
+        document.getElementById('title')
+    );
+
+
+    //add an item
+    class AddPanel extends React.Component{
+        constructor(props) {
+            super(props);
+            this.state = {
+                name: '',
+                content: '',
+                expire_date: '',
+                status: 0,
+                priority: 1,
+            };
+            this.handleChange = this.handleChange.bind(this);
+        }
+
+        handleChange(event) {
+            this.setState({[event.target.name]: event.target.value});
+        }
+
+        render() {
+            return (
+                <form name="add" action="/todolist/add" method="post">
+                    <div>
+                        Name:<br />
+                        <input name="name" onChange={this.handleChange} /><br />
+                        Content:<br />
+                        <input name="content" onChange={this.handleChange} /><br />
+                        Expire Date:<br />
+                        <input type="date" name="expire_date" onChange={this.handleChange} /><br />
+                        Priority:
+                        <select name="priority" onChange={this.handleChange}>
+                            <option value="1" selected>Low</option>
+                            <option value="2">High</option>
+                        </select><br />
+                        <button type="submit">Add</button>
+                    </div>
+                </form>
+            );
+        }
+    };
+
+    ReactDOM.render(
+        <div>
+            <AddPanel />
+            <br />
+        </div>,
+        document.getElementById('todolist')
+    );
+
+</script>

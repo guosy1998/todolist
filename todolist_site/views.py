@@ -65,22 +65,3 @@ class TodolistView(APIView):
         item.save()
 
         return redirect('todolist')
-
-"""
-    # Django restframework example code, not used
-    # Add the following lines when needed
-    # from rest_framework import status, generics
-    # from rest_framework.response import Response
-    def get(self, request, format=None):
-        todolist = Todolist.objects.all()
-        serializer = TodolistSerializer(todolist, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = TodolistSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-"""
