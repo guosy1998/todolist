@@ -18,7 +18,7 @@ class TodolistView(APIView):
         elif seq == '1':
             todolist = Todolist.objects.all().order_by('-priority')
         else:
-            todolist = Todolist.objects.all().order_by('id')
+            todolist = Todolist.objects.all().order_by('-id')
 
         serializer = TodolistSerializer(todolist, many=True)
         return render(request, template_name='todolist.html', context={'todolist': serializer.data})
@@ -45,15 +45,8 @@ class TodolistView(APIView):
         item.save()
         return redirect('todolist')
 
-    # edit an existing item: showing the edit page
-    def edit(request):
-        id = request.POST.get('id')
-        todolist = Todolist.objects.filter(id=id)
-        serializer = TodolistSerializer(todolist, many=True)
-        return render(request, template_name='todolist_edit.html', context={'todolist': serializer.data})
-
     # edit an existing item: submit the result
-    def edit_submit(request):
+    def edit(request):
         id = request.POST.get('id')
 
         item = Todolist.objects.get(id=id)

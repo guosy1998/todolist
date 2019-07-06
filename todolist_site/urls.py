@@ -7,5 +7,4 @@ urlpatterns = [
     path('delete', views.TodolistView.delete, name='delete'),
     path('status', views.TodolistView.status, name='status'),
     path('edit', views.TodolistView.edit, name='edit'),
-    path('edit_submit', views.TodolistView.edit_submit, name='edit_submit'),
 ]

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Todolist</title>
-    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
-    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
 
     <style>
@@ -32,67 +32,94 @@
     <!-- title -->
     <div id="title"></div>
 
-    <!-- mainlist -->
-    <div id="todolist"></div>
+    <!-- functions -->
+    <div id="funcpanel"></div>
 
     <!-- show the list-->
     <table border="1" bgcolor="white" frame="void" rules="rows" width="100%">
-        <!-- change the list order -->
-        <form name="order" action="/todolist/" method="post">
-            <select name="seq">
-                <option value="0" selected>Time Created</option>
-                <option value="1">Priority</option>
-                <option value="2">Expire Date</option>
-            </select>
-            <button type="submit">Order</button><br>
-        </form>
         <tr><th></th></tr>
 
         {% for item in todolist %}
             <tr>
                 <td>
+                    <div class="origin{{ item.id }}" style="display: inline">
+                        <label>Name: {{ item.name }}</label><br>
+                        <label>Content: {{ item.content }}</label><br>
+                        <label>Expire Date: {{ item.expire_date }}</label><br>
 
-                    <label>Name: {{ item.name }}</label><br>
-                    <label>Content: {{ item.content }}</label><br>
-                    <label>Expire Date: {{ item.expire_date }}</label><br>
+                        {% ifequal item.status '0' %}
+                            <!-- change the status -->
+                            <form name="status" action="/todolist/status" method="POST">
+                                {% csrf_token %}
+                                <label>Status: Pending</label>
+                                <input type="hidden" name="id" value="{{ item.id }}">
+                                <button class="button" type="submit">√</button>
+                            </form>
+                        {% else %}
+                            <label>Status: Complete</label><br>
+                        {% endifequal %}
 
-                    {% ifequal item.status '0' %}
-                        <!-- change the status -->
-                        <form name="status" action="/todolist/status" method="POST">
-                            {% csrf_token %}
-                            <label>Status: Pending</label>
+                        {% ifequal item.priority '1' %}
+                            <label>Priority: Low</label><br>
+                        {% else %}
+                            <label>Priority: High</label><br>
+                        {% endifequal %}
+
+                        <table>
+                            <tr>
+                                <th>
+                                    <!-- edit button -->
+                                    <button class="button" onclick="show({{ item.id }})">Edit</button><br>
+                                </th>
+
+                                <th>
+                                    <!-- delete button -->
+                                    <form name="delete" action="/todolist/delete" method="post">
+                                        <input type="hidden" name="id" value="{{ item.id }}">
+                                        <button class="button" type="submit">Delete</button><br>
+                                    </form>
+                                </th>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                    <div class="edit{{ item.id }}" style="display: none">
+                        <form name="add" action="/todolist/edit" method="post">
                             <input type="hidden" name="id" value="{{ item.id }}">
-                            <button class="button" type="submit">√</button>
+                            Name:<br>
+                            <input name="name" value="{{ item.name }}"><br>
+                            Content:<br>
+                            <input name="content" value="{{ item.content }}"><br>
+                            Expire Date:<br>
+                            <input type="date" name="expire_date" value="{{ item.expire_date }}"><br>
+                            Status:
+                            <select name="status">
+                                <option value="0" selected>Pending</option>
+                                <option value="1">Complete</option>
+                            </select><br>
+                            Priority:
+                            <select name="priority">
+                                <option value="1" selected>Low</option>
+                                <option value="2">High</option>
+                            </select><br>
+                            <table>
+                                <tr>
+                                    <th>
+                                        <!-- cancel button -->
+                                        <button class="button" type="button" onclick="show({{ item.id }})">Cancel</button><br>
+                                    </th>
+
+                                    <th>
+                                        <!-- submit button -->
+                                        <button class="button" type="submit">Submit</button><br>
+                                    </th>
+                                </tr>
+                            </table>
+                            <br>
                         </form>
-                    {% else %}
-                        <label>Status: Complete</label><br>
-                    {% endifequal %}
+                    </div>
 
-                    {% ifequal item.priority '1' %}
-                        <label>Priority: Low</label><br>
-                    {% else %}
-                        <label>Priority: High</label><br>
-                    {% endifequal %}
-
-                    <table>
-                        <tr>
-                            <th>
-                                <!-- edit button -->
-                                <form name="edit" action="/todolist/edit" method="post">
-                                    <input type="hidden" name="id" value="{{ item.id }}">
-                                    <button class="button" type="submit">Edit</button><br>
-                                </form>
-                            </th>
-
-                            <th>
-                                <!-- delete button -->
-                                <form name="delete" action="/todolist/delete" method="post">
-                                    <input type="hidden" name="id" value="{{ item.id }}">
-                                    <button class="button" type="submit">Delete</button><br>
-                                </form>
-                            </th>
-                        </tr>
-                    </table>
 
                 </td>
             </tr>
@@ -152,12 +179,59 @@
         }
     };
 
+    //order
+    class OrderPanel extends React.Component{
+        constructor(props) {
+            super(props);
+            this.state = {seq: 0};
+        }
+
+        handleChange(event) {
+            this.setState({[event.target.name]: event.target.value});
+        }
+
+        render() {
+            return (
+                <form name="order" action="/todolist/" method="post">
+                    <select name="seq" onChange={this.handleChange.bind(this)}>
+                        <option value="0" selected>Time Created</option>
+                        <option value="1">Priority</option>
+                        <option value="2">Expire Date</option>
+                    </select>
+                    <button type="submit">Order</button><br />
+                </form>
+            );
+        }
+    }
+
     ReactDOM.render(
         <div>
             <AddPanel />
             <br />
+            <OrderPanel />
+            <br />
         </div>,
-        document.getElementById('todolist')
+        document.getElementById('funcpanel')
     );
 
+</script>
+
+<script>
+    function show(id)
+    {
+        var origins = document.getElementsByClassName('origin'+id);
+        var edits = document.getElementsByClassName('edit'+id);
+
+        origin = origins[0];
+        edit = edits[0];
+
+        if (origin.style.display=="none") {
+            origin.style.display="inline";
+            edit.style.display="none";
+        }
+        else {
+            origin.style.display="none";
+            edit.style.display="inline";
+        }
+    }
 </script>
