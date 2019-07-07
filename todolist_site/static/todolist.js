@@ -86,6 +86,7 @@ function Priority(props) {
     );
 };
 
+//include details and edit
 class Item extends React.Component {
     constructor(props) {
         super(props);
