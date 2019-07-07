@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load staticfiles %}
 <head>
     <meta charset="UTF-8">
     <title>Todolist</title>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <link rel="stylesheet" href="../static/style.css"/>
 
     <script type="text/babel">
         //add an item
@@ -160,16 +163,24 @@
 
                 return (
                     <div>
-                        {button}
-                        <this.Switch
-                            edit={this.state.edit}
-                            id={this.props.id}
-                            name={this.props.name}
-                            content={this.props.content}
-                            expire_date={this.props.expire_date}
-                            status={this.props.status}
-                            priority={this.props.priority}
-                        />
+                        <table>
+                            <tr>
+                                <th>
+                                    {button}
+                                </th>
+                                <th>
+                                    <this.Switch
+                                        edit={this.state.edit}
+                                        id={this.props.id}
+                                        name={this.props.name}
+                                        content={this.props.content}
+                                        expire_date={this.props.expire_date}
+                                        status={this.props.status}
+                                        priority={this.props.priority}
+                                    />
+                                </th>
+                            </tr>
+                        </table>
                     </div>
                 );
             }
@@ -179,24 +190,34 @@
             return (
                 <div>
                     <form name="add" action="/todolist/edit" method="post">
-                        <input type="hidden" name="id" value={props.id} />
-                        Name:<br />
-                        <input name="name" value={props.name} /><br />
-                        Content:<br />
-                        <input name="content" value={props.content} /><br />
-                        Expire Date:<br />
-                        <input type="date" name="expire_date" value={props.expire_date} /><br />
-                        Status:
-                        <select class="select" name="status">
-                            <option value="0" selected>Pending</option>
-                            <option value="1">Complete</option>
-                        </select><br />
-                        Priority:
-                        <select class="select" name="priority">
-                            <option value="1" selected>Low</option>
-                            <option value="2">High</option>
-                        </select><br />
-                        <button class="button" type="submit">Submit</button><br />
+                        <table>
+                            <tr>
+                                <th>
+                                    <input type="hidden" name="id" value={props.id} />
+                                    Name:<br />
+                                    <input name="name" value={props.name} /><br />
+                                    Content:<br />
+                                    <input name="content" value={props.content} />
+                                </th>
+                                <th>
+                                    Expire Date:<br />
+                                    <input type="date" name="expire_date" value={props.expire_date} /><br />
+                                    Status:
+                                    <select class="select" name="status">
+                                        <option value="0" selected>Pending</option>
+                                        <option value="1">Complete</option>
+                                    </select><br />
+                                    Priority:
+                                    <select class="select" name="priority">
+                                        <option value="1" selected>Low</option>
+                                        <option value="2">High</option>
+                                    </select>
+                                </th>
+                                <th>
+                                    <button class="button" type="submit">Submit</button><br />
+                                </th>
+                            </tr>
+                        </table>
                     </form>
                 </div>
             );
@@ -208,26 +229,48 @@
                 this.state = {opacity: 1.0 - this.props.status * 0.7};
             }
 
+            Details(props) {
+                return (
+                    <div>
+                        <table align="center">
+                            <tr>
+                                <th>
+                                    <label>{props.name}</label>
+                                </th>
+                                <th>
+                                    <label>Expire Date: {props.expire_date}</label>
+                                </th>
+                                <th>
+                                    <Priority priority={props.priority} />
+                                </th>
+                            </tr>
+                        </table>
+                        <label>Content: {props.content}</label>
+                    </div>
+                );
+            }
+
             render() {
                 return (
                     <div>
-                        <div style={this.state}>
-                            <label>Name: {this.props.name}</label><br />
-                            <label>Content: {this.props.content}</label><br />
-                            <label>Expire Date: {this.props.expire_date}</label><br />
-                            <Priority priority={this.props.priority} />
-                        </div>
-
                         <table>
                             <tr>
                                 <th>
                                     <Status status={this.props.status} id={this.props.id} />
-                                </th>
-                                <th>
                                     <form name="delete" action="/todolist/delete" method="POST">
                                         <input type="hidden" name="id" value={this.props.id} />
                                         <button class="button" type="submit">×</button><br />
                                     </form>
+                                </th>
+                                <th>
+                                    <div style={this.state}>
+                                        <this.Details
+                                            name={this.props.name}
+                                            content={this.props.content}
+                                            expire_date={this.props.expire_date}
+                                            priority={this.props.priority}
+                                        />
+                                    </div>
                                 </th>
                             </tr>
                         </table>
@@ -237,36 +280,6 @@
         }
     </script>
 
-    <style>
-        .select
-        {
-            padding: 4px 10px;
-            text-align: center;
-            background-color: white;
-            color: black;
-            border: 2px solid grey;
-            border-radius:5px;
-        }
-
-        .button
-        {
-            -webkit-transition-duration: 0.4s;
-            transition-duration: 0.4s;
-            padding: 4px 10px;
-            text-align: center;
-            background-color: white;
-            color: black;
-            border: 2px solid grey;
-            border-radius:5px;
-        }
-
-        .button:hover
-        {
-            background-color: grey;
-            color: white;
-        }
-
-    </style>
 </head>
 <body>
     <div align="center">

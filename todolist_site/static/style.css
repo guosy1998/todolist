@@ -1,0 +1,27 @@
+.select
+{
+    padding: 4px 10px;
+    text-align: center;
+    background-color: white;
+    color: black;
+    border: 2px solid grey;
+    border-radius:5px;
+}
+
+.button
+{
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    padding: 4px 10px;
+    text-align: center;
+    background-color: white;
+    color: black;
+    border: 2px solid grey;
+    border-radius:5px;
+}
+
+.button:hover
+{
+    background-color: grey;
+    color: white;
+}
