@@ -53,16 +53,11 @@
                 return (
                     <form name="status" action="/todolist/status" method="POST">
                         <input type="hidden" name="id" value={props.id}  />
-                        <label>Status: Pending</label>
                         <button class="button" type="submit">√</button>
                     </form>
                 );
             }
-            return (
-                <div>
-                    <label>Status: Complete</label><br />
-                </div>
-            );
+            return <div />;
         };
 
         //priority entry
@@ -188,21 +183,43 @@
             );
         }
 
-        function Origin(props) {
-            return (
-                <div>
-                    <label>Name: {props.name}</label><br />
-                    <label>Content: {props.content}</label><br />
-                    <label>Expire Date: {props.expire_date}</label><br />
-                    <Status status={props.status} id={props.id} />
-                    <Priority priority={props.priority} />
+        class Origin extends React.Component {
+            constructor(props) {
+                super(props);
+                if (this.props.status==0) {
+                    this.state = {opacity: 1.0};
+                }
+                else {
+                    this.state = {opacity: 0.3};
+                }
+            }
 
-                    <form name="delete" action="/todolist/delete" method="POST">
-                        <input type="hidden" name="id" value={props.id} />
-                        <button class="button" type="submit">Delete</button><br />
-                    </form>
-                </div>
-            );
+            render() {
+                return (
+                    <div>
+                        <div style={this.state}>
+                            <label>Name: {this.props.name}</label><br />
+                            <label>Content: {this.props.content}</label><br />
+                            <label>Expire Date: {this.props.expire_date}</label><br />
+                            <Priority priority={this.props.priority} />
+                        </div>
+
+                        <table>
+                            <tr>
+                                <th>
+                                    <Status status={this.props.status} id={this.props.id} />
+                                </th>
+                                <th>
+                                    <form name="delete" action="/todolist/delete" method="POST">
+                                        <input type="hidden" name="id" value={this.props.id} />
+                                        <button class="button" type="submit">×</button><br />
+                                    </form>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                );
+            }
         }
 
 
@@ -254,10 +271,8 @@
     <script type="text/babel">
         ReactDOM.render(
             <div>
-                <AddPanel />
-                <br />
-                <OrderPanel />
-                <br />
+                <AddPanel /><br />
+                <OrderPanel /><br />
             </div>,
             document.getElementById('funcpanel')
         );
