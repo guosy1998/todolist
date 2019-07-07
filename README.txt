@@ -19,5 +19,6 @@ templates： 网页模板
 安装说明：
 python:3.6.8
 Django:2.2.2
+Django_rest_framework:3.9.4
 database:postgresql
 运行指令：python3 manage.py runserver
