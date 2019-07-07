@@ -13,17 +13,30 @@
             render() {
                 return (
                     <form name="add" action="/todolist/add" method="post">
-                        Name:<br />
-                        <input name="name" /><br />
-                        Content:<br />
-                        <input name="content" /><br />
-                        Expire Date:<br />
-                        <input type="date" name="expire_date" /><br />
-                        Priority:
-                        <select class="select" name="priority">
-                            <option value="1" selected>Low</option>
-                            <option value="2">High</option>
-                        </select><br />
+                        <table>
+                            <tr>
+                                <td>Name:</td>
+                                <td><input name="name" /></td>
+                            </tr>
+                            <tr>
+                                <td>Content:</td>
+                                <td><input name="content" /></td>
+                            </tr>
+                            <tr>
+                                <td>Expire Date:</td>
+                                <td><input type="date" name="expire_date" /></td>
+                            </tr>
+                            <tr>
+                                <td>Priority:</td>
+                                <td>
+                                    <select className="select" name="priority">
+                                        <option value="1" selected>Low</option>
+                                        <option value="2">High</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
                         <button class="button" type="submit">Add</button>
                     </form>
                 );
@@ -35,12 +48,19 @@
             render() {
                 return (
                     <form name="order" action="/todolist/" method="post">
-                        <select class="select" name="seq">
-                            <option value="0" selected>Time Created</option>
-                            <option value="1">Priority</option>
-                            <option value="2">Expire Date</option>
-                        </select>
-                        <button class="button" type="submit">Order</button><br />
+                        <table>
+                            <tr>
+                                <td>
+                                    <select className="select" name="seq">
+                                        <option value="0" selected>Time Created</option>
+                                        <option value="1">Priority</option>
+                                        <option value="2">Expire Date</option>
+                                    </select>
+                                </td>
+                                <td><button className="button" type="submit">Order</button></td>
+                            </tr>
+                        </table>
+                        <br/>
                     </form>
                 );
             }
@@ -177,7 +197,6 @@
                             <option value="2">High</option>
                         </select><br />
                         <button class="button" type="submit">Submit</button><br />
-                        <br />
                     </form>
                 </div>
             );
@@ -250,53 +269,54 @@
     </style>
 </head>
 <body>
-    <!-- title -->
-    <div id="title"></div>
-    <script type="text/babel">
-        ReactDOM.render(
-            <h1>Todolist</h1>,
-            document.getElementById('title')
-        );
-    </script>
+    <div align="center">
+        <!-- title -->
+        <div id="title"></div>
+        <script type="text/babel">
+            ReactDOM.render(
+                <h1>Todolist</h1>,
+                document.getElementById('title')
+            );
+        </script>
 
-    <!-- functions -->
-    <div id="funcpanel"></div>
-    <script type="text/babel">
-        ReactDOM.render(
-            <div>
-                <AddPanel /><br />
-                <OrderPanel /><br />
-            </div>,
-            document.getElementById('funcpanel')
-        );
-    </script>
+        <!-- functions -->
+        <div id="funcpanel"></div>
+        <script type="text/babel">
+            ReactDOM.render(
+                <div>
+                    <AddPanel /><br />
+                    <OrderPanel /><br />
+                </div>,
+                document.getElementById('funcpanel')
+            );
+        </script>
 
-    <!-- show the list-->
-    <table border="1" bgcolor="white" frame="void" rules="rows" width="100%">
-        <tr><th></th></tr>
+        <!-- show the list-->
+        <table border="1" bgcolor="white" frame="void" rules="rows" width="40%">
+            <tr><th></th></tr>
 
-        {% for item in todolist %}
-            <tr>
-                <td>
-                    <!-- one item-->
-                    <div id="item{{ item.id }}"></div>
-                    <script type="text/babel">
-                        ReactDOM.render(
-                            <Item
-                                id="{{ item.id }}"
-                                name="{{ item.name }}"
-                                content="{{ item.content }}"
-                                expire_date="{{ item.expire_date }}"
-                                status="{{ item.status }}"
-                                priority="{{ item.priority }}"
-                            />,
-                            document.getElementById('item'+{{ item.id }})
-                        );
-                    </script>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-
+            {% for item in todolist %}
+                <tr>
+                    <td>
+                        <!-- one item-->
+                        <div id="item{{ item.id }}"></div>
+                        <script type="text/babel">
+                            ReactDOM.render(
+                                <Item
+                                    id="{{ item.id }}"
+                                    name="{{ item.name }}"
+                                    content="{{ item.content }}"
+                                    expire_date="{{ item.expire_date }}"
+                                    status="{{ item.status }}"
+                                    priority="{{ item.priority }}"
+                                />,
+                                document.getElementById('item'+{{ item.id }})
+                            );
+                        </script>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 </html>
