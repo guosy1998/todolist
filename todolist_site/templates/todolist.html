@@ -186,12 +186,7 @@
         class Origin extends React.Component {
             constructor(props) {
                 super(props);
-                if (this.props.status==0) {
-                    this.state = {opacity: 1.0};
-                }
-                else {
-                    this.state = {opacity: 0.3};
-                }
+                this.state = {opacity: 1.0 - this.props.status * 0.7};
             }
 
             render() {
