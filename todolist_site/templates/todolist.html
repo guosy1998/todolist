@@ -8,6 +8,16 @@
     <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
 
     <style>
+        .select
+        {
+            padding: 4px 10px;
+            text-align: center;
+            background-color: white;
+            color: black;
+            border: 2px solid grey;
+            border-radius:5px;
+        }
+
         .button
         {
             -webkit-transition-duration: 0.4s;
@@ -47,7 +57,7 @@
                         <script type="text/babel">
                             class Status extends React.Component{
                                 render() {
-                                    if (this.props.status=='0') {
+                                    if (this.props.status==0) {
                                         //change status
                                         return (
                                             <form name="status" action="/todolist/status" method="POST">
@@ -69,7 +79,7 @@
 
                             class Priority extends React.Component{
                                 render() {
-                                    if (this.props.priority=='1') {
+                                    if (this.props.priority==1) {
                                         return (
                                             <div>
                                                 <label>Priority: Low</label><br />
@@ -86,8 +96,7 @@
                                 }
                             };
 
-                            ReactDOM.render
-                            (
+                            ReactDOM.render(
                                 <div>
                                     <label>Name: {{ item.name }}</label><br />
                                     <label>Content: {{ item.content }}</label><br />
@@ -128,12 +137,12 @@
                             Expire Date:<br>
                             <input type="date" name="expire_date" value="{{ item.expire_date }}"><br>
                             Status:
-                            <select name="status">
+                            <select class="select" name="status">
                                 <option value="0" selected>Pending</option>
                                 <option value="1">Complete</option>
                             </select><br>
                             Priority:
-                            <select name="priority">
+                            <select class="select" name="priority">
                                 <option value="1" selected>Low</option>
                                 <option value="2">High</option>
                             </select><br>
@@ -186,11 +195,11 @@
                     Expire Date:<br />
                     <input type="date" name="expire_date" /><br />
                     Priority:
-                    <select name="priority">
+                    <select class="select" name="priority">
                         <option value="1" selected>Low</option>
                         <option value="2">High</option>
                     </select><br />
-                    <button type="submit">Add</button>
+                    <button class="button" type="submit">Add</button>
                 </form>
             );
         }
@@ -201,12 +210,12 @@
         render() {
             return (
                 <form name="order" action="/todolist/" method="post">
-                    <select name="seq">
+                    <select class="select" name="seq">
                         <option value="0" selected>Time Created</option>
                         <option value="1">Priority</option>
                         <option value="2">Expire Date</option>
                     </select>
-                    <button type="submit">Order</button><br />
+                    <button class="button" type="submit">Order</button><br />
                 </form>
             );
         }
@@ -222,7 +231,6 @@
         </div>,
         document.getElementById('funcpanel')
     );
-
 </script>
 
 <script>

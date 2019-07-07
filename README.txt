@@ -15,3 +15,9 @@
 todolist： Django Project设置文件
 todolist_site： 网站功能页面
 templates： 网页模板
+
+安装说明：
+python:3.6.8
+Django:2.2.2
+database:postgresql
+运行指令：python3 manage.py runserver
