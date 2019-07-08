@@ -195,11 +195,11 @@
                                 <th>
                                     <input type="hidden" name="id" value={props.id} />
                                     Name:
-                                    <input name="name" value={props.name} /><br />
+                                    <input name="name" placeholder={props.name} /><br />
                                     Content:
-                                    <input name="content" value={props.content} /><br />
+                                    <input name="content" placeholder={props.content} /><br />
                                     Expire Date:
-                                    <input type="date" name="expire_date" value={props.expire_date} /><br />
+                                    <input type="date" name="expire_date" /><br />
                                 </th>
                                 <th>
                                     Status:
@@ -286,7 +286,6 @@
         }
 
     </script>
-    <script type="text/babel" src="../static/function.js"></script>
 </head>
 <body>
     <div align="center">
